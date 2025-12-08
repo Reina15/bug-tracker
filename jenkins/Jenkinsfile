@@ -9,6 +9,11 @@ pipeline {
                     reuseNode true
                 }
             }
+            environment {
+                GOCACHE = "${WORKSPACE}/.cache/go-build"
+                GOPATH = "${WORKSPACE}/.go"
+                HOME = "${WORKSPACE}"  // This tells Go to use workspace as home
+            }
             steps {
                 dir('bugtracker-backend') {
                     sh 'go test -v ./...'
