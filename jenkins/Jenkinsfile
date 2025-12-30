@@ -145,6 +145,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Performance Tests') {
             agent {
                 docker {
@@ -156,7 +157,7 @@ pipeline {
 
             steps {
                 dir('tests-perf') {
-                    sh 'k6 run scrips.js'
+                    sh 'k6 run scrip.js'
                 }
             }
         }
