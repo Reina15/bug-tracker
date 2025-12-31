@@ -40,7 +40,6 @@ jobs:
 
           echo "report<<EOF" >> $GITHUB_OUTPUT
           cat coverage.txt >> $GITHUB_OUTPUT
-
           echo "EOF" >> $GITHUB_OUTPUT
 
           go test -v ./... 2>&1 | go-junit-report > test-results.xml
@@ -55,6 +54,8 @@ jobs:
 
   unit-tests-frontend:
     runs-on: ubuntu-latest
+    outputs:
+      coverage: ${{ steps.test-frontend.outputs.report }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up Node.js
@@ -64,15 +65,20 @@ jobs:
           cache: "npm"
           cache-dependency-path: bugtracker-frontend/package-lock.json
       - name: Execute Frontend Unit tests
+        id: test-frontend
         working-directory: ./bugtracker-frontend
         run: |
           npm ci 
           npm test | tee full_output.txt
 
-          echo "## Frontend Test Coverage Report new" >> $GITHUB_STEP_SUMMARY
+          echo "## Frontend Test Coverage Report new new" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
           cat full_output.txt >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
+
+          echo "report<<EOF" >> $GITHUB_OUTPUT
+          cat full_output.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Publish FE Test Results
         uses: dorny/test-reporter@v1
@@ -98,3 +104,14 @@ jobs:
             ```
             ${{ needs.unit-tests-backend.outputs.coverage }}
             ```
+
+      - name: Create FrontEnd Coverage Comment
+        uses: peter-evans/create-or-update-comment@v4
+        with: 
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ## Frontend Test Coverage Report
+            ```
+            ${{ needs.unit-tests-frontend.outputs.coverage }}
+            ```
+            
