@@ -97,7 +97,7 @@ jobs:
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.pull_request.number }}
-          body:
+          body: |
             ## Backend Test Coverage Report
             ```
             ${{ needs.unit-tests-backend.outputs.coverage }}
