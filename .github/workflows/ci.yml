@@ -4,7 +4,7 @@ on:
   push: 
     branches:
       - main
-  workflow_dispatcj:
+  workflow_dispatch:
 
 jobs:
   unit-tests-backend:
