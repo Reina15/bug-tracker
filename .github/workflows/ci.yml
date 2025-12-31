@@ -31,7 +31,7 @@ jobs:
         with:
           node-version: "20"
           cache: "npm"
-          ache-dependency-path: bugtracker-frontend/package-lock.json
+          cache-dependency-path: bugtracker-frontend/package-lock.json
       - name: Execute Frontend Unit tests
         working-directory: ./bugtracker-frontend
         run: |
